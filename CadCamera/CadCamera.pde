@@ -55,20 +55,22 @@ void mouseReleased() {
 }
 
 void mouseDragged() {
-  if (keyPressed == true) {
-    println(0);
-    if (key == CODED) {
-      println(1);
-      if (keyCode == CONTROL) {
-        println(2);
-        pushStyle();
-        scene.beginScreenCoordinates();
-        rectMode(CORNERS);
-        stroke(125);
-        fill(63, 125);
-        rect(clicLEFT.get(0), clicLEFT.get(1), mouseX, mouseY);
-        scene.endScreenCoordinates();
-        popStyle();
+  if (clicLEFT != null) {
+    if (keyPressed == true) {
+      println(0);
+      if (key == CODED) {
+        println(1);
+        if (keyCode == CONTROL) {
+          println(2);
+          pushStyle();
+          scene.beginScreenCoordinates();
+          rectMode(CORNERS);
+          stroke(125);
+          fill(63, 125);
+          rect(clicLEFT.get(0), clicLEFT.get(1), mouseX, mouseY);
+          scene.endScreenCoordinates();
+          popStyle();
+        }
       }
     }
   }
