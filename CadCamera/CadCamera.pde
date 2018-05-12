@@ -5,6 +5,9 @@
  * This example illustrates how to add a CAD Camera type to your scene
 */
 
+import java.util.List;
+import java.util.Arrays;
+
 import frames.processing.Scene;
 
 import frames.core.Graph;
@@ -16,9 +19,10 @@ import frames.primitives.Quaternion;
 
 import frames.input.Shortcut;
 
-
 Scene scene;
 Node eye;
+
+List<Integer> clicLEFT = Arrays.asList(new Integer[2]);
 
 void setup() {
   size(640, 360, P3D);
@@ -40,5 +44,32 @@ void setup() {
 void draw() {
   background(0);
   scene.drawAxes();
-  
+}
+
+void mousePressed() {
+  clicLEFT = Arrays.asList(mouseX, mouseY);
+}
+
+void mouseReleased() {
+  clicLEFT = null;
+}
+
+void mouseDragged() {
+  if (keyPressed == true) {
+    println(0);
+    if (key == CODED) {
+      println(1);
+      if (keyCode == CONTROL) {
+        println(2);
+        pushStyle();
+        scene.beginScreenCoordinates();
+        rectMode(CORNERS);
+        stroke(125);
+        fill(63, 125);
+        rect(clicLEFT.get(0), clicLEFT.get(1), mouseX, mouseY);
+        scene.endScreenCoordinates();
+        popStyle();
+      }
+    }
+  }
 }

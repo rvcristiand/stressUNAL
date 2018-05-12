@@ -10,22 +10,20 @@
 
 public class OrbitNode extends Node {
   public OrbitNode(Graph graph) {
-    super(graph, null, new Vector(), new Quaternion(0, -1, 0, 1), 1);
+    super(graph);
+    setWheelSensitivity(-wheelSensitivity());
   }
-  
+
   @Override
-  public void interact(frames.input.Event event) {
-    if (event.shortcut().matches(new Shortcut(Event.SHIFT, CENTER)))
-      rotate(event);
-    else if (event.shortcut().matches(new Shortcut(CENTER)))
+    public void interact(frames.input.Event event) {
+    if (event.shortcut().matches(new Shortcut(LEFT)))
       translate(event);
     else if (event.shortcut().matches(new Shortcut(processing.event.MouseEvent.WHEEL)))
       translateZ(event);
-    //if (event.shortcut().matches(new Shortcut(RIGHT)))
-    //  rotate(event);
-    //else if (event.shortcut().matches(new Shortcut(LEFT))) {
-    //  if (!event.isShiftDown()) {
-    //    translate(event);
+    else if (event.shortcut().matches(new Shortcut(frames.input.Event.SHIFT, LEFT)))
+      rotate(event);
+    else if (event.shortcut().matches(new Shortcut(frames.input.Event.CTRL, LEFT)))
+      zoomOnRegion(event);
     //  } else {
     //    rotate(event);
     //  }
@@ -34,6 +32,6 @@ public class OrbitNode extends Node {
     //else if (event.shortcut().matches(new Shortcut(processing.event.MouseEvent.WHEEL)))
     //  if (event.isShiftDown()) {
     //    translateZ(event);
-      //}
+    //}
   }
 }
