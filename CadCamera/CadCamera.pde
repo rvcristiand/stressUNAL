@@ -13,7 +13,6 @@ import frames.processing.Scene;
 import frames.core.Graph;
 import frames.core.Node;
 
-// import frames.primitives.Frame;
 import frames.primitives.Vector;
 import frames.primitives.Quaternion;
 
@@ -57,11 +56,8 @@ void mouseReleased() {
 void mouseDragged() {
   if (clicLEFT != null) {
     if (keyPressed == true) {
-      println(0);
       if (key == CODED) {
-        println(1);
         if (keyCode == CONTROL) {
-          println(2);
           pushStyle();
           scene.beginScreenCoordinates();
           rectMode(CORNERS);
