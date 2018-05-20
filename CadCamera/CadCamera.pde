@@ -21,18 +21,29 @@ import frames.input.Shortcut;
 Scene scene;
 Node eye;
 
-List<Integer> clicLEFT = Arrays.asList(new Integer[2]);
+// mouse
+int positionMousePressed[] = new int[2];
+
+boolean isLeftMouseButtonPressed;
+boolean isRightMouseButtonPressed;
+boolean isCenterMouseButtonPressed;
+boolean isMouseDragged;
+boolean isMouseDoubleClicked;
+
+// keyboard
+boolean isControlKeyPressed;
 
 void setup() {
   size(640, 360, P3D);
-  // Scene instanttiation
+  // Scene instantiation
   scene = new Scene(this);
   // Set right handed world frame (usefil for engineers...)
   scene.setRadius(200);
+  // Set scene
   scene.fitBall();
   scene.setType(Graph.Type.ORTHOGRAPHIC);
   scene.setRightHanded();
-  
+  // Set eye
   eye = new OrbitNode(scene);
   scene.setEye(eye);
   scene.setFieldOfView((float) Math.PI / 3);
@@ -43,31 +54,90 @@ void setup() {
 void draw() {
   background(0);
   scene.drawAxes();
+  
+  drawRectMouseDragged();
+  zoomAll();
+}
+
+void zoomAll() {
+  // Perform fitBallInterpolation with double left clic button
+  if (isMouseDoubleClicked && isLeftMouseButtonPressed) {
+    scene.fitBallInterpolation();
+    mouseButtonReleased();
+    isMouseDoubleClicked = false;
+  }
+}
+
+void drawRectMouseDragged() {
+  // Draw a rect in the frontbuffer
+  if (isControlKeyPressed && isLeftMouseButtonPressed && isMouseDragged) {
+    pushStyle();
+    scene.beginScreenCoordinates();
+    rectMode(CORNERS);
+    stroke(125);
+    fill(63, 125);
+    rect(positionMousePressed[0], positionMousePressed[1], mouseX, mouseY);
+    scene.endScreenCoordinates();
+    popStyle();
+  }
+}
+
+void mouseButtonPressed() {
+  // mouse button flags
+  switch (mouseButton) {
+    case LEFT   : isLeftMouseButtonPressed   = true;
+    case RIGHT  : isRightMouseButtonPressed  = true;
+    case CENTER : isCenterMouseButtonPressed = true;
+  }
+}
+
+void mouseButtonReleased() {
+  // mouse button flags
+  isLeftMouseButtonPressed   = false;
+  isRightMouseButtonPressed  = false;
+  isCenterMouseButtonPressed = false;
 }
 
 void mousePressed() {
-  clicLEFT = Arrays.asList(mouseX, mouseY);
-}
-
-void mouseReleased() {
-  clicLEFT = null;
+  // position mouse pressed
+  positionMousePressed = new int[]{mouseX, mouseY};
+  mouseButtonPressed();
 }
 
 void mouseDragged() {
-  if (clicLEFT != null) {
-    if (keyPressed == true) {
-      if (key == CODED) {
-        if (keyCode == CONTROL) {
-          pushStyle();
-          scene.beginScreenCoordinates();
-          rectMode(CORNERS);
-          stroke(125);
-          fill(63, 125);
-          rect(clicLEFT.get(0), clicLEFT.get(1), mouseX, mouseY);
-          scene.endScreenCoordinates();
-          popStyle();
-        }
-      }
+  // mouse dragged flag
+  isMouseDragged = true;
+}
+
+void mouseReleased() {
+  // position mouse pressed
+  positionMousePressed = null;
+  
+  // mouse button pressed
+  mouseButtonReleased();
+  
+  // mouse dragged
+  isMouseDragged = false;
+}
+
+public void mouseClicked(MouseEvent evt) {
+  // double clic mouse flag
+  if (evt.getCount() == 2) {
+    isMouseDoubleClicked = true;
+    mouseButtonPressed();
+  }
+}
+
+void keyPressed() {
+  // key pressed flags
+  if (key == CODED) {
+    switch (keyCode) {
+      case CONTROL: isControlKeyPressed = true;
     }
   }
+}
+
+void keyReleased() {
+  // key pressed flags
+  isControlKeyPressed = false;
 }
