@@ -21,12 +21,12 @@ void setup() {
   scene = new Scene(this);
   //Set right handed world frame (useful for architects...)
   scene.setRightHanded();
-  scene.eyeFrame().setMotionBinding(LEFT, "rotateCAD"); // qué significa setBinding (InteractiveFrame)
+  scene.eyeFrame().setMotionBinding(LEFT, "rotateCAD"); // qué significa setBinding (Profile.java)
   scene.camera().frame().setRotationSensitivity(1.5);  // donde instancia el eye(AbstractScene)
   //no spinning:
-  scene.camera().frame().setSpinningSensitivity(100); // qué es spinning 
+  scene.camera().frame().setSpinningSensitivity(100); // qué es spinning // por defecto 0.3f
   //no damping:
-  scene.camera().frame().setDamping(1); // qué es damping
+  scene.camera().frame().setDamping(1); // qué es damping // por defecto 0.5f
 }
 
 void draw() {

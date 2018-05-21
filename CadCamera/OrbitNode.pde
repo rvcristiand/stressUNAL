@@ -13,6 +13,8 @@ public class OrbitNode extends Node {
     super(graph);
     setWheelSensitivity(-wheelSensitivity());
     setRotationSensitivity(1.5f);
+    setSpinningSensitivity(100);
+    setDamping(1.f);
   }
 
   @Override

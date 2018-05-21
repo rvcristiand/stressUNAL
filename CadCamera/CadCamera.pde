@@ -2,7 +2,7 @@
  * Cad Camera
  * by Cristian Danilo Ramirez Vargas
  * 
- * This example illustrates how to add a CAD Camera type to your scene
+ * This example illustrates how to add a CAD Camera type to your scene.
 */
 
 import java.util.List;
@@ -38,11 +38,13 @@ void setup() {
   // Scene instantiation
   scene = new Scene(this);
   // Set right handed world frame (usefil for engineers...)
-  scene.setRadius(200);
-  // Set scene
-  scene.fitBall();
-  scene.setType(Graph.Type.ORTHOGRAPHIC);
   scene.setRightHanded();
+  // scene.eyeFrame().setMotionBinding(LEFT, "rotateCAD"); // qué significa setBinding (Profile.java)
+  // scene.setRadius(200);
+  // Set scene
+  // scene.fitBall();
+  scene.setType(Graph.Type.ORTHOGRAPHIC);
+  
   // Set eye
   eye = new OrbitNode(scene);
   scene.setEye(eye);
@@ -53,6 +55,8 @@ void setup() {
 
 void draw() {
   background(0);
+  fill(204, 102, 0);
+  box(20, 30, 50);
   scene.drawAxes();
   
   drawRectMouseDragged();
