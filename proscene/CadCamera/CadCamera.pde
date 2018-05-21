@@ -4,10 +4,10 @@
  * 
  * This example illustrates how to add a CAD Camera type to your your scene.
  * 
- * Press 'h' to display the key shortcuts and mouse bindings in the console.
+ * Press 'h' to display the key shortcuts and mouse bindings in the console. // dónde está implementado 'h'
  * Press 'u' to switch between right handed and left handed world frame.
- * Press the space bar to switch between camera profiles: CAD and CAD_CAM.
- * Press x, y or z to set the main rotation axis (defined in the world
+ * Press the space bar to switch between camera profiles: CAD and CAD_CAM. // qué significa CAD and CAD_CAM
+ * Press x, y or z to set the main rotation axis (defined in the world // que significa eje princpal de rotación
  * coordinate system) used by the CAD Camera.
  */
 
@@ -21,12 +21,12 @@ void setup() {
   scene = new Scene(this);
   //Set right handed world frame (useful for architects...)
   scene.setRightHanded();
-  scene.eyeFrame().setMotionBinding(LEFT, "rotateCAD");
-  scene.camera().frame().setRotationSensitivity(1.5);
+  scene.eyeFrame().setMotionBinding(LEFT, "rotateCAD"); // qué significa setBinding (InteractiveFrame)
+  scene.camera().frame().setRotationSensitivity(1.5);  // donde instancia el eye(AbstractScene)
   //no spinning:
-  scene.camera().frame().setSpinningSensitivity(100);
+  scene.camera().frame().setSpinningSensitivity(100); // qué es spinning 
   //no damping:
-  scene.camera().frame().setDamping(1);
+  scene.camera().frame().setDamping(1); // qué es damping
 }
 
 void draw() {
