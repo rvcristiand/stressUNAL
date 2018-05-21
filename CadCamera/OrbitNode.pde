@@ -12,6 +12,7 @@ public class OrbitNode extends Node {
   public OrbitNode(Graph graph) {
     super(graph);
     setWheelSensitivity(-wheelSensitivity());
+    setRotationSensitivity(1.5f);
   }
 
   @Override
