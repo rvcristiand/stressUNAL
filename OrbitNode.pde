@@ -26,6 +26,8 @@ public class OrbitNode extends Node {
     else if (event.shortcut().matches(new Shortcut(RIGHT)))
       rotate(event);
     else if (event.shortcut().matches(new Shortcut(CENTER)))
+      this.graph().fitBallInterpolation();
+    else if (event.shortcut().matches(new Shortcut(frames.input.Event.CTRL, CENTER)))
       zoomOnRegion(event);
   }
 }

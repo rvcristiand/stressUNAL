@@ -74,7 +74,7 @@ void draw() {
   // scene.drawAxes();
   // scene.drawDottedGrid();
 
-  seti();
+  // seti();
   drawRectMouseDragged();
   // zoomAll();
 }
@@ -86,19 +86,18 @@ void seti() {
   }
 }
 
-void zoomAll() {
-  // Perform fitBallInterpolation with double left clic button
-  if (isMouseDoubleClicked && isLeftMouseButtonPressed) {
-    scene.fitBallInterpolation();  // how update scene.setRadius();
-    mouseButtonReleased();
-    isMouseDoubleClicked = false;
-  }
-}
+// void zoomAll() {
+//   // Perform fitBallInterpolation with double left clic button
+//   if (isMouseDoubleClicked && isLeftMouseButtonPressed) {
+//     scene.fitBallInterpolation();  // how update scene.setRadius();
+//     mouseButtonReleased();
+//     isMouseDoubleClicked = false;
+//   }
+// }
 
 void drawRectMouseDragged() {
   // Draw a rect in the frontbuffer
-  println(isCenterMouseButtonPressed);
-  if (isCenterMouseButtonPressed && isMouseDragged) {
+  if (isCenterMouseButtonPressed && isControlKeyPressed) {
     pushStyle();
     scene.beginScreenCoordinates();
     rectMode(CORNERS);
@@ -112,7 +111,6 @@ void drawRectMouseDragged() {
 
 void mouseButtonPressed() {
   // mouse button flags
-  println(mouseButton);
   switch (mouseButton) {
     case LEFT :
       isLeftMouseButtonPressed   = true;

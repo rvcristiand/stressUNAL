@@ -99,7 +99,7 @@ public void draw() {
   // scene.drawAxes();
   // scene.drawDottedGrid();
 
-  seti();
+  // seti();
   drawRectMouseDragged();
   // zoomAll();
 }
@@ -111,19 +111,18 @@ public void seti() {
   }
 }
 
-public void zoomAll() {
-  // Perform fitBallInterpolation with double left clic button
-  if (isMouseDoubleClicked && isLeftMouseButtonPressed) {
-    scene.fitBallInterpolation();  // how update scene.setRadius();
-    mouseButtonReleased();
-    isMouseDoubleClicked = false;
-  }
-}
+// void zoomAll() {
+//   // Perform fitBallInterpolation with double left clic button
+//   if (isMouseDoubleClicked && isLeftMouseButtonPressed) {
+//     scene.fitBallInterpolation();  // how update scene.setRadius();
+//     mouseButtonReleased();
+//     isMouseDoubleClicked = false;
+//   }
+// }
 
 public void drawRectMouseDragged() {
   // Draw a rect in the frontbuffer
-  println(isCenterMouseButtonPressed);
-  if (isCenterMouseButtonPressed && isMouseDragged) {
+  if (isCenterMouseButtonPressed && isControlKeyPressed) {
     pushStyle();
     scene.beginScreenCoordinates();
     rectMode(CORNERS);
@@ -137,7 +136,6 @@ public void drawRectMouseDragged() {
 
 public void mouseButtonPressed() {
   // mouse button flags
-  println(mouseButton);
   switch (mouseButton) {
     case LEFT :
       isLeftMouseButtonPressed   = true;
@@ -308,6 +306,8 @@ public class OrbitNode extends Node {
     else if (event.shortcut().matches(new Shortcut(RIGHT)))
       rotate(event);
     else if (event.shortcut().matches(new Shortcut(CENTER)))
+      this.graph().fitBallInterpolation();
+    else if (event.shortcut().matches(new Shortcut(frames.input.Event.CTRL, CENTER)))
       zoomOnRegion(event);
   }
 }
