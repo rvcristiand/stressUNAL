@@ -1,3 +1,28 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.List; 
+import java.util.Arrays; 
+import frames.processing.Scene; 
+import frames.core.Graph; 
+import frames.core.Node; 
+import frames.primitives.Vector; 
+import frames.primitives.Quaternion; 
+import frames.input.Shortcut; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class CadCamera extends PApplet {
+
 /**
  * Cad Camera
  * by Cristian Danilo Ramirez Vargas
@@ -5,18 +30,18 @@
  * This example illustrates how to add a CAD Camera type to your scene.
 */
 
-import java.util.List;
-import java.util.Arrays;
 
-import frames.processing.Scene;
 
-import frames.core.Graph;
-import frames.core.Node;
 
-import frames.primitives.Vector;
-import frames.primitives.Quaternion;
 
-import frames.input.Shortcut;
+
+
+
+
+
+
+
+
 
 Scene scene;
 Node eye;
@@ -33,8 +58,8 @@ boolean isMouseDoubleClicked;
 // keyboard
 boolean isControlKeyPressed;
 
-void setup() {
-  size(640, 360, P3D);
+public void setup() {
+  
   // Scene instantiation
   scene = new Scene(this);
   // Set right handed world frame (usefil for engineers...)
@@ -53,7 +78,7 @@ void setup() {
   scene.fitBall();
 }
 
-void draw() {
+public void draw() {
   background(0);
   fill(204, 102, 0);
   box(20, 30, 50);
@@ -63,7 +88,7 @@ void draw() {
   zoomAll();
 }
 
-void zoomAll() {
+public void zoomAll() {
   // Perform fitBallInterpolation with double left clic button
   if (isMouseDoubleClicked && isLeftMouseButtonPressed) {
     scene.fitBallInterpolation();
@@ -72,7 +97,7 @@ void zoomAll() {
   }
 }
 
-void drawRectMouseDragged() {
+public void drawRectMouseDragged() {
   // Draw a rect in the frontbuffer
   if (isControlKeyPressed && isLeftMouseButtonPressed && isMouseDragged) {
     pushStyle();
@@ -86,7 +111,7 @@ void drawRectMouseDragged() {
   }
 }
 
-void mouseButtonPressed() {
+public void mouseButtonPressed() {
   // mouse button flags
   switch (mouseButton) {
     case LEFT   : isLeftMouseButtonPressed   = true;
@@ -95,25 +120,25 @@ void mouseButtonPressed() {
   }
 }
 
-void mouseButtonReleased() {
+public void mouseButtonReleased() {
   // mouse button flags
   isLeftMouseButtonPressed   = false;
   isRightMouseButtonPressed  = false;
   isCenterMouseButtonPressed = false;
 }
 
-void mousePressed() {
+public void mousePressed() {
   // position mouse pressed
   positionMousePressed = new int[]{mouseX, mouseY};
   mouseButtonPressed();
 }
 
-void mouseDragged() {
+public void mouseDragged() {
   // mouse dragged flag
   isMouseDragged = true;
 }
 
-void mouseReleased() {
+public void mouseReleased() {
   // position mouse pressed
   positionMousePressed = null;
 
@@ -132,7 +157,7 @@ public void mouseClicked(MouseEvent evt) {
   }
 }
 
-void keyPressed() {
+public void keyPressed() {
   // key pressed flags
   if (key == CODED) {
     switch (keyCode) {
@@ -141,7 +166,57 @@ void keyPressed() {
   }
 }
 
-void keyReleased() {
+public void keyReleased() {
   // key pressed flags
   isControlKeyPressed = false;
+}
+/**
+ * OrbitNode
+ * by Cristian Danilo Ramirez Vargas
+ * 
+ * This class implements a node behavior which requires
+ * overriding the interact(Event) method.
+ * 
+ * Feel free to copy paste it.
+ */
+
+public class OrbitNode extends Node {
+  public OrbitNode(Graph graph) {
+    super(graph);
+    setWheelSensitivity(-wheelSensitivity());
+    setRotationSensitivity(1.5f);
+    setSpinningSensitivity(100);
+    setDamping(1.f);
+  }
+
+  @Override
+    public void interact(frames.input.Event event) {
+    if (event.shortcut().matches(new Shortcut(LEFT)))
+      translate(event);
+    else if (event.shortcut().matches(new Shortcut(processing.event.MouseEvent.WHEEL)))
+      translateZ(event);
+    else if (event.shortcut().matches(new Shortcut(frames.input.Event.SHIFT, LEFT)))
+      rotate(event);
+    else if (event.shortcut().matches(new Shortcut(frames.input.Event.CTRL, LEFT)))
+      zoomOnRegion(event);
+    //  } else {
+    //    rotate(event);
+    //  }
+    //else if (event.shortcut().matches(new Shortcut(CENTER)))
+    //  translate(event);
+    //else if (event.shortcut().matches(new Shortcut(processing.event.MouseEvent.WHEEL)))
+    //  if (event.isShiftDown()) {
+    //    translateZ(event);
+    //}
+  }
+}
+  public void settings() {  size(640, 360, P3D); }
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "CadCamera" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }
