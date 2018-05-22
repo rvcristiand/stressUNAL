@@ -8,7 +8,7 @@
 // import frames.primitives.Frame;
 
 public class Punto extends Node {
-Graph graph;
+  Graph graph;
 
   float startSize = 1;
   int startColor = color(255,   0,   0);

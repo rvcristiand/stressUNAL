@@ -47,6 +47,7 @@ Node eye;
 
 // stressUNAL
 Grilla grilla;
+ArrayList<Portico> porticos;
 // Punto punto;
 
 // mouse
@@ -63,7 +64,7 @@ boolean isMouseDoubleClicked;
 
 // keyboard
 boolean isControlKeyPressed;
-boolean drawFrame;
+boolean addFrame;
 
 public void setup() {
   
@@ -82,11 +83,13 @@ public void setup() {
   scene.setEye(eye);
   scene.setFieldOfView((float) Math.PI / 3);
   scene.setDefaultGrabber(eye); // el nodo captura los dispositivos de entrada
+  // scene.setRadius(100);
   scene.fitBall();  // como actualizar el radio dinámico
 
-  // Grilla
+  // stressUNAL
   grilla = new Grilla(scene);
   grilla.setPoints();
+  porticos = new ArrayList();
   // Punto
   // punto = new Punto(scene);
 }
@@ -99,16 +102,31 @@ public void draw() {
   // scene.drawAxes();
   // scene.drawDottedGrid();
 
-  // seti();
+  // addFrame();
   drawRectMouseDragged();
   // zoomAll();
 }
 
-public void seti() {
-  if (isMouseClicked && isLeftMouseButtonPressed && drawFrame) {
-    i = new Vector(mouseX, mouseY, 0);
-    println(i);
+public void addFrame() {
+  if (i == null) {
+    seti();
+    j = null;
+  } else {
+    setj();
+    println("i: ", i);
+    println("j: ", j);
+    porticos.add(new Portico(i, j));
+    i = null;
+    j = null;
   }
+}
+
+public void seti() {
+  i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+}
+
+public void setj() {
+  j = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
 }
 
 // void zoomAll() {
@@ -178,19 +196,20 @@ public void mouseReleased() {
   isMouseDragged = false;
 
   // mouse clicked
-  isMouseClicked = false;
+  // isMouseClicked = false;
 
   //mouse double clicked
-  isMouseDoubleClicked = false;
+  // isMouseDoubleClicked = false;
 }
 
 public void mouseClicked(MouseEvent event) {
   // double clic mouse flag
   switch (event.getCount()) {
-    case 1 : isMouseClicked       = true;
-             isMouseDoubleClicked = false;
-    case 2 : isMouseClicked       = false;
-             isMouseDoubleClicked = true;
+    case 1 :
+      if (addFrame) {
+        addFrame();
+      }
+      break;
   }
   // mouseButtonPressed();
 }
@@ -201,9 +220,9 @@ public void keyPressed() {
   //   grilla.setnumx(5);
   // }
   if (key == 'f') {
-    drawFrame = !drawFrame;
+    addFrame = !addFrame;
 
-    if (drawFrame) {
+    if (addFrame) {
       println("Draw a frame");
     } else {
       println('\n');
@@ -311,6 +330,43 @@ public class OrbitNode extends Node {
       zoomOnRegion(event);
   }
 }
+// /**
+//  * Frame.
+//  * by Cristian Danilo Ramirez Vargas
+//  *
+//  * This class implements a Frame ...
+//  */
+//
+public class Portico {
+  Node node;
+  PShape s;
+
+  Vector i;
+  Vector j;
+
+  public Portico(Vector i, Vector j) {
+    this.i = i;
+    this.j = j;
+
+    this.node = new Node(scene) {
+      @Override
+      public void visit() {
+        drawLine();
+      }
+    };
+    node.setPosition(j);
+  }
+
+  public void drawLine() {
+    beginShape();
+    pushStyle();
+    stroke(20);
+    vertex(this.i.x(), this.i.y(), this.i.z());
+    vertex(this.j.x(), this.j.y(), this.j.z());
+    popStyle();
+    endShape();
+  }
+}
 /**
  * Punto.
  * by Cristian Danilo Ramirez Vargas
@@ -321,7 +377,7 @@ public class OrbitNode extends Node {
 // import frames.primitives.Frame;
 
 public class Punto extends Node {
-Graph graph;
+  Graph graph;
 
   float startSize = 1;
   int startColor = color(255,   0,   0);
@@ -368,21 +424,6 @@ Graph graph;
     // this.graph.eye().interact(event);
   // }
 }
-// /**
-//  * Frame.
-//  * by Cristian Danilo Ramirez Vargas
-//  *
-//  * This class implements a Frame ...
-//  */
-//
-// public class frame() {
-//   Vector i;
-//   Vector j;
-//
-//   public frame() {
-//
-//   }
-// }
   public void settings() {  size(640, 360, P3D); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "stressUNAL" };

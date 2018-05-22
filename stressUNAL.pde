@@ -22,6 +22,7 @@ Node eye;
 
 // stressUNAL
 Grilla grilla;
+ArrayList<Portico> porticos;
 // Punto punto;
 
 // mouse
@@ -38,7 +39,7 @@ boolean isMouseDoubleClicked;
 
 // keyboard
 boolean isControlKeyPressed;
-boolean drawFrame;
+boolean addFrame;
 
 void setup() {
   size(640, 360, P3D);
@@ -57,11 +58,13 @@ void setup() {
   scene.setEye(eye);
   scene.setFieldOfView((float) Math.PI / 3);
   scene.setDefaultGrabber(eye); // el nodo captura los dispositivos de entrada
+  // scene.setRadius(100);
   scene.fitBall();  // como actualizar el radio dinámico
 
-  // Grilla
+  // stressUNAL
   grilla = new Grilla(scene);
   grilla.setPoints();
+  porticos = new ArrayList();
   // Punto
   // punto = new Punto(scene);
 }
@@ -74,16 +77,31 @@ void draw() {
   // scene.drawAxes();
   // scene.drawDottedGrid();
 
-  // seti();
+  // addFrame();
   drawRectMouseDragged();
   // zoomAll();
 }
 
-void seti() {
-  if (isMouseClicked && isLeftMouseButtonPressed && drawFrame) {
-    i = new Vector(mouseX, mouseY, 0);
-    println(i);
+void addFrame() {
+  if (i == null) {
+    seti();
+    j = null;
+  } else {
+    setj();
+    println("i: ", i);
+    println("j: ", j);
+    porticos.add(new Portico(i, j));
+    i = null;
+    j = null;
   }
+}
+
+void seti() {
+  i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+}
+
+void setj() {
+  j = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
 }
 
 // void zoomAll() {
@@ -153,19 +171,20 @@ void mouseReleased() {
   isMouseDragged = false;
 
   // mouse clicked
-  isMouseClicked = false;
+  // isMouseClicked = false;
 
   //mouse double clicked
-  isMouseDoubleClicked = false;
+  // isMouseDoubleClicked = false;
 }
 
-public void mouseClicked(MouseEvent event) {
+void mouseClicked(MouseEvent event) {
   // double clic mouse flag
   switch (event.getCount()) {
-    case 1 : isMouseClicked       = true;
-             isMouseDoubleClicked = false;
-    case 2 : isMouseClicked       = false;
-             isMouseDoubleClicked = true;
+    case 1 :
+      if (addFrame) {
+        addFrame();
+      }
+      break;
   }
   // mouseButtonPressed();
 }
@@ -176,9 +195,9 @@ void keyPressed() {
   //   grilla.setnumx(5);
   // }
   if (key == 'f') {
-    drawFrame = !drawFrame;
+    addFrame = !addFrame;
 
-    if (drawFrame) {
+    if (addFrame) {
       println("Draw a frame");
     } else {
       println('\n');
