@@ -5,12 +5,12 @@ Programa de análisis estructural para Ingeniería Civil.
 
 ## Mouse
 ### Desplazamiento
-Clic con el botón izquierdo de mouse.
-### Zoom
-Adelante y hacía atrás con el botón central de mouse.
+Arrastrar el mouse presionando el botón izquierdo.
 ### Rotación
-Presionar la tecla SHIFT y el botón izquierdo del mouse.
+Arrastrar el mouse presionando el botón derecho.
+### Zoom
+Girar la rueda del mouse hacía adelante y hacía atrás.
 ### Zoom en región
-Presionar la tecla CONTROL y arrastar el mouse presionando el botón izquierdo.
+Arrastrar el mouse presionando el botón central.
 ### Zoom en todo
-Doble clic con el botón izquierdo del mouse.
+Clic con el botón central del mouse.

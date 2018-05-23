@@ -21,25 +21,25 @@ Scene scene;
 Node eye;
 
 // stressUNAL
-Grilla grilla;
-ArrayList<Portico> porticos;
+// Grilla grilla;
+// ArrayList<Portico> porticos;
 // Punto punto;
 
 // mouse
-int positionMousePressed[] = new int[2];
-Vector i;
-Vector j;
+Vector positionMousePressed;
+// Vector i;
+// Vector j;
 
-boolean isLeftMouseButtonPressed;
-boolean isRightMouseButtonPressed;
+// boolean isLeftMouseButtonPressed;
+// boolean isRightMouseButtonPressed;
 boolean isCenterMouseButtonPressed;
 boolean isMouseDragged;
-boolean isMouseClicked;
-boolean isMouseDoubleClicked;
+// boolean isMouseClicked;
+// boolean isMouseDoubleClicked;
 
 // keyboard
-boolean isControlKeyPressed;
-boolean addFrame;
+// boolean isControlKeyPressed;
+// boolean addFrame;
 
 void setup() {
   size(640, 360, P3D);
@@ -62,9 +62,9 @@ void setup() {
   scene.fitBall();  // como actualizar el radio dinámico
 
   // stressUNAL
-  grilla = new Grilla(scene);
-  grilla.setPoints();
-  porticos = new ArrayList();
+  // grilla = new Grilla(scene);
+  // grilla.setPoints();
+  // porticos = new ArrayList();
   // Punto
   // punto = new Punto(scene);
 }
@@ -73,36 +73,36 @@ void draw() {
   background(127);
   fill(204, 102, 0);
   // box(20, 30, 50);
-  scene.traverse();
-  // scene.drawAxes();
-  // scene.drawDottedGrid();
+  // scene.traverse();
+  scene.drawAxes();
+  scene.drawDottedGrid();
 
   // addFrame();
   drawRectMouseDragged();
   // zoomAll();
 }
 
-void addFrame() {
-  if (i == null) {
-    seti();
-    j = null;
-  } else {
-    setj();
-    println("i: ", i);
-    println("j: ", j);
-    porticos.add(new Portico(i, j));
-    i = null;
-    j = null;
-  }
-}
+// void addFrame() {
+//   if (i == null) {
+//     seti();
+//     j = null;
+//   } else {
+//     setj();
+//     println("i: ", i);
+//     println("j: ", j);
+//     // porticos.add(new Portico(i, j));
+//     i = null;
+//     j = null;
+//   }
+// }
 
-void seti() {
-  i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
-}
-
-void setj() {
-  j = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
-}
+// void seti() {
+//   i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+// }
+//
+// void setj() {
+//   j = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+// }
 
 // void zoomAll() {
 //   // Perform fitBallInterpolation with double left clic button
@@ -115,13 +115,13 @@ void setj() {
 
 void drawRectMouseDragged() {
   // Draw a rect in the frontbuffer
-  if (isCenterMouseButtonPressed && isControlKeyPressed) {
+  if (isCenterMouseButtonPressed && isMouseDragged) {
     pushStyle();
     scene.beginScreenCoordinates();
     rectMode(CORNERS);
     stroke(125);
     fill(63, 125);
-    rect(positionMousePressed[0], positionMousePressed[1], mouseX, mouseY);
+    rect(positionMousePressed.x(), positionMousePressed.y(), mouseX, mouseY);
     scene.endScreenCoordinates();
     popStyle();
   }
@@ -130,12 +130,12 @@ void drawRectMouseDragged() {
 void mouseButtonPressed() {
   // mouse button flags
   switch (mouseButton) {
-    case LEFT :
-      isLeftMouseButtonPressed   = true;
-      break;
-    case RIGHT :
-      isRightMouseButtonPressed  = true;
-      break;
+    // case LEFT :
+    //   isLeftMouseButtonPressed   = true;
+    //   break;
+    // case RIGHT :
+    //   isRightMouseButtonPressed  = true;
+    //   break;
     case CENTER :
       isCenterMouseButtonPressed = true;
       break;
@@ -144,14 +144,14 @@ void mouseButtonPressed() {
 
 void mouseButtonReleased() {
   // mouse button flags
-  isLeftMouseButtonPressed   = false;
-  isRightMouseButtonPressed  = false;
+  // isLeftMouseButtonPressed   = false;
+  // isRightMouseButtonPressed  = false;
   isCenterMouseButtonPressed = false;
 }
 
 void mousePressed() {
   // position mouse pressed
-  positionMousePressed = new int[]{mouseX, mouseY};
+  positionMousePressed = new Vector(mouseX, mouseY);
   mouseButtonPressed();
 }
 
@@ -177,40 +177,40 @@ void mouseReleased() {
   // isMouseDoubleClicked = false;
 }
 
-void mouseClicked(MouseEvent event) {
-  // double clic mouse flag
-  switch (event.getCount()) {
-    case 1 :
-      if (addFrame) {
-        addFrame();
-      }
-      break;
-  }
-  // mouseButtonPressed();
-}
+// void mouseClicked(MouseEvent event) {
+//   // double clic mouse flag
+//   switch (event.getCount()) {
+//     case 1 :
+//       if (addFrame) {
+//         addFrame();
+//       }
+//       break;
+//   }
+//   // mouseButtonPressed();
+// }
 
-void keyPressed() {
-  // key pressed flags
-  // if (key == '+') {
-  //   grilla.setnumx(5);
-  // }
-  if (key == 'f') {
-    addFrame = !addFrame;
+// void keyPressed() {
+//   // key pressed flags
+//   // if (key == '+') {
+//   //   grilla.setnumx(5);
+//   // }
+//   if (key == 'f') {
+//     addFrame = !addFrame;
+//
+//     if (addFrame) {
+//       println("Draw a frame");
+//     } else {
+//       println('\n');
+//     }
+//   }
+//   // if (key == CODED) {
+//   //   switch (keyCode) {
+//   //     case CONTROL : isControlKeyPressed = true;
+//   //   }
+//   // }
+// }
 
-    if (addFrame) {
-      println("Draw a frame");
-    } else {
-      println('\n');
-    }
-  }
-  if (key == CODED) {
-    switch (keyCode) {
-      case CONTROL : isControlKeyPressed = true;
-    }
-  }
-}
-
-void keyReleased() {
-  // key pressed flags
-  isControlKeyPressed = false;
-}
+// void keyReleased() {
+//   // key pressed flags
+//   isControlKeyPressed = false;
+// }
