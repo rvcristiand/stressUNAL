@@ -21,7 +21,7 @@ Scene scene;
 Node eye;
 
 // stressUNAL
-// Grilla grilla;
+Grilla grilla;
 // ArrayList<Portico> porticos;
 // Punto punto;
 
@@ -62,7 +62,7 @@ void setup() {
   scene.fitBall();  // como actualizar el radio dinámico
 
   // stressUNAL
-  // grilla = new Grilla(scene);
+  grilla = new Grilla(scene);
   // grilla.setPoints();
   // porticos = new ArrayList();
   // Punto
@@ -75,7 +75,7 @@ void draw() {
   // box(20, 30, 50);
   // scene.traverse();
   scene.drawAxes();
-  scene.drawDottedGrid();
+  // scene.drawDottedGrid();
 
   // addFrame();
   drawRectMouseDragged();

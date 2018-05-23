@@ -48,7 +48,7 @@ Scene scene;
 Node eye;
 
 // stressUNAL
-// Grilla grilla;
+Grilla grilla;
 // ArrayList<Portico> porticos;
 // Punto punto;
 
@@ -83,13 +83,13 @@ public void setup() {
   // Set eye
   eye = new OrbitNode(scene);
   scene.setEye(eye);
-  scene.setFieldOfView((float) Math.PI / 3);
+  scene.setFieldOfView((float) Math.PI);// scene.setFieldOfView((float) Math.PI / 3);
   scene.setDefaultGrabber(eye); // el nodo captura los dispositivos de entrada
   // scene.setRadius(100);
   scene.fitBall();  // como actualizar el radio dinámico
 
   // stressUNAL
-  // grilla = new Grilla(scene);
+  grilla = new Grilla(scene);
   // grilla.setPoints();
   // porticos = new ArrayList();
   // Punto
@@ -102,7 +102,7 @@ public void draw() {
   // box(20, 30, 50);
   // scene.traverse();
   scene.drawAxes();
-  scene.drawDottedGrid();
+  // scene.drawDottedGrid();
 
   // addFrame();
   drawRectMouseDragged();
