@@ -6,12 +6,13 @@ import processing.opengl.*;
 import java.util.List; 
 import java.util.Arrays; 
 import frames.processing.Scene; 
-import frames.core.Graph; 
 import frames.core.Node; 
+import frames.core.Graph; 
+import frames.core.Interpolator; 
+import frames.primitives.Frame; 
 import frames.primitives.Vector; 
 import frames.primitives.Quaternion; 
 import frames.input.Shortcut; 
-import frames.input.event.TapEvent; 
 import frames.input.event.TapShortcut; 
 
 import java.util.HashMap; 
@@ -43,19 +44,28 @@ public class stressUNAL extends PApplet {
 
 
 
+
+
+
+
+
+
+
 // frames
 Scene scene;
-Node eye;
+Eye eye;
 
 // stressUNAL
 Grilla grilla;
-// ArrayList<Portico> porticos;
+
+Vector i;
+Vector j;
+
+ArrayList<Portico> porticos;
 // Punto punto;
 
 // mouse
 Vector positionMousePressed;
-// Vector i;
-// Vector j;
 
 // boolean isLeftMouseButtonPressed;
 // boolean isRightMouseButtonPressed;
@@ -66,7 +76,7 @@ boolean isMouseDragged;
 
 // keyboard
 // boolean isControlKeyPressed;
-// boolean addFrame;
+boolean addPortico;
 
 public void setup() {
   
@@ -81,17 +91,17 @@ public void setup() {
   scene.setType(Graph.Type.ORTHOGRAPHIC);
 
   // Set eye
-  eye = new OrbitNode(scene);
+  eye = new Eye(scene);
   scene.setEye(eye);
-  scene.setFieldOfView((float) Math.PI);// scene.setFieldOfView((float) Math.PI / 3);
+  scene.setFieldOfView((float) Math.PI / 3);
   scene.setDefaultGrabber(eye); // el nodo captura los dispositivos de entrada
   // scene.setRadius(100);
   scene.fitBall();  // como actualizar el radio dinámico
 
   // stressUNAL
   grilla = new Grilla(scene);
-  // grilla.setPoints();
-  // porticos = new ArrayList();
+  grilla.setPoints();
+  porticos = new ArrayList();
   // Punto
   // punto = new Punto(scene);
 }
@@ -100,28 +110,31 @@ public void draw() {
   background(127);
   fill(204, 102, 0);
   // box(20, 30, 50);
-  // scene.traverse();
+  scene.traverse();
   scene.drawAxes();
   // scene.drawDottedGrid();
 
-  // addFrame();
+  if (addPortico) {
+    addPortico();
+  }
+
+  for (Portico portico : porticos) {
+    scene.drawPath(portico);
+  }
+
   drawRectMouseDragged();
   // zoomAll();
 }
 
-// void addFrame() {
-//   if (i == null) {
-//     seti();
-//     j = null;
-//   } else {
-//     setj();
-//     println("i: ", i);
-//     println("j: ", j);
-//     // porticos.add(new Portico(i, j));
-//     i = null;
-//     j = null;
-//   }
-// }
+public void addPortico() {
+  if (i != null && j != null) {
+    Nodo i = new Nodo(scene, i);
+    Nodo j = new Nodo(scene, j);
+    // porticos.add(new Portico(scene, i, j));
+    i = null;
+    j = null;
+  }
+}
 
 // void seti() {
 //   i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
@@ -216,89 +229,31 @@ public void mouseReleased() {
 //   // mouseButtonPressed();
 // }
 
-// void keyPressed() {
+public void keyPressed() {
 //   // key pressed flags
 //   // if (key == '+') {
 //   //   grilla.setnumx(5);
 //   // }
-//   if (key == 'f') {
-//     addFrame = !addFrame;
-//
-//     if (addFrame) {
-//       println("Draw a frame");
-//     } else {
-//       println('\n');
-//     }
+  if (key == 'f') {
+    addPortico = !addPortico;
+
+    if (addPortico) {
+      println("Draw a frame");
+    } else {
+      println("Abort !");
+    }
 //   }
 //   // if (key == CODED) {
 //   //   switch (keyCode) {
 //   //     case CONTROL : isControlKeyPressed = true;
 //   //   }
-//   // }
-// }
+  }
+}
 
 // void keyReleased() {
 //   // key pressed flags
 //   isControlKeyPressed = false;
 // }
-/**
- * Grilla.
- * by Cristian Danilo Ramirez Vargas
- *
- * This class implements a Gilla ...
- */
-
- public class Grilla {
-   Graph graph;
-
-   int numx = 10;
-   int numy = 10;
-
-   float distx = 50;
-   float disty = 50;
-
-   ArrayList<Punto> puntos;
-
-   public Grilla(Graph graph) {
-     this.graph = graph;
-   }
-
-   public void setPoints() {
-     Punto punto;
-     puntos = new ArrayList();
-
-     for (int i = 0; i < this.numx; i++) {
-       for (int j = 0; j < this.numy; j++) {
-         punto = new Punto(this.graph);
-         punto.translate(new Vector(i * this.distx,
-                                    j * this.disty));
-         puntos.add(punto);
-       }
-     }
-   }
-
-   public int numx() {
-     return this.numx;
-   }
-
-   public void setnumx(int numx) {
-     this.numx = numx;
-
-     this.setPoints();
-   }
-
-   public void setnumy(int numy) {
-     this.numy = numy;
-   }
-
-   public void setdistx(float distx) {
-     this.distx = distx;
-   }
-
-   public void setdisty(float disty) {
-     this.disty = disty;
-   }
- }
 /**
  * OrbitNode
  * by Cristian Danilo Ramirez Vargas
@@ -309,11 +264,8 @@ public void mouseReleased() {
  * Feel free to copy paste it.
  */
 
-
-
-
-public class OrbitNode extends Node {
-  public OrbitNode(Graph graph) {
+public class Eye extends Node {
+  public Eye(Graph graph) {
     super(graph);
     setWheelSensitivity(-wheelSensitivity());
     setRotationSensitivity(1.5f);
@@ -341,9 +293,118 @@ public class OrbitNode extends Node {
     }
     // zoom all
     else if (event.shortcut().matches(new TapShortcut(CENTER, 1))) {
-      this.graph().fitBallInterpolation();
+      graph().fitBallInterpolation();
     }
   }
+}
+/**
+ * Grilla.
+ * by Cristian Danilo Ramirez Vargas
+ *
+ * This class implements a Gilla ...
+ */
+
+ public class Grilla {
+   int numx;
+   int numy;
+
+   float distx;
+   float disty;
+
+   ArrayList<Punto> puntos;
+
+   public Grilla(Graph graph) {
+     puntos = new ArrayList();
+
+     numx = 10;
+     numy = 10;
+
+     distx = 50;
+     disty = 50;
+   }
+
+   public void setPoints() {
+     Punto punto;
+
+     for (int i = 0; i < numx; i++) {
+       for (int j = 0; j < numy; j++) {
+         punto = new Punto(scene);
+         punto.translate(new Vector(i * distx,
+                                    j * disty));
+         puntos.add(punto);
+       }
+     }
+   }
+
+   // int numx() {
+   //   return this.numx;
+   // }
+   //
+   // void setnumx(int numx) {
+   //   this.numx = numx;
+   //
+   //   this.setPoints();
+   // }
+   //
+   // void setnumy(int numy) {
+   //   this.numy = numy;
+   // }
+   //
+   // void setdistx(float distx) {
+   //   this.distx = distx;
+   // }
+   //
+   // void setdisty(float disty) {
+   //   this.disty = disty;
+   // }
+ }
+/**
+ * Nudo.
+ * by Cristian Danilo Ramirez Vargas
+ *
+ * This class implements a Nudo ...
+ */
+
+public class Nodo extends Punto {
+  float startSize = 1;
+  int startColor  = color(255, 0, 0);
+
+  float endSize = 1.5f * startSize;
+  int endColor  = color(0, 255, 255);
+
+  public Nodo(Scene scene, Vector i) {
+    super(scene, null, i, new Quaternion(), 1);
+  }
+
+  @Override
+  public void visit() {
+    pushStyle();
+    noStroke();
+    if (!graph().isInputGrabber(this)) {
+      fill(startColor);
+      sphere(startSize);
+    } else {
+      fill(endSize);
+      sphere(endSize);
+    }
+    popStyle();
+  }
+
+  // @Override
+  // public void interact(frames.input.Event event) {
+  //   if (event.shortcut().matches(new TapShortcut(LEFT, 1))) {
+  //     if (addPortico) {
+  //       if (i == null) {
+  //         i = position();
+  //       } else if (j == null) {
+  //         j = position();
+  //       }
+  //       println("i: ", i);;
+  //       println("j: ", j);
+  //       println("\n");
+  //     }
+  //   }
+  // }
 }
 // /**
 //  * Frame.
@@ -352,34 +413,26 @@ public class OrbitNode extends Node {
 //  * This class implements a Frame ...
 //  */
 //
-public class Portico {
-  Node node;
-  PShape s;
+public class Portico extends Interpolator {
+  ArrayList<Frame> _path;
 
   Vector i;
   Vector j;
 
-  public Portico(Vector i, Vector j) {
+  public Portico(Scene scene, Vector i, Vector j) {
+    super((Graph) scene);
+
     this.i = i;
     this.j = j;
-
-    this.node = new Node(scene) {
-      @Override
-      public void visit() {
-        drawLine();
-      }
-    };
-    node.setPosition(j);
+    _path = new ArrayList();
   }
 
-  public void drawLine() {
-    beginShape();
-    pushStyle();
-    stroke(20);
-    vertex(this.i.x(), this.i.y(), this.i.z());
-    vertex(this.j.x(), this.j.y(), this.j.z());
-    popStyle();
-    endShape();
+  @Override
+  public ArrayList<Frame> path() {
+    _path.add(new Frame(i, new Quaternion()));
+    _path.add(new Frame(j, new Quaternion()));
+
+    return _path;
   }
 }
 /**
@@ -389,55 +442,31 @@ public class Portico {
  * This class implements a Punto ...
  */
 
-// import frames.primitives.Frame;
 
 public class Punto extends Node {
-  Graph graph;
-
-  float startSize = 1;
-  int startColor = color(255,   0,   0);
-
-  float endSize = 1.5f * this.startSize;
-  int endColor   = color(  0, 255, 255);
-
-  public Punto(Graph graph) {
-    super(graph);
-
-    graph = graph;
+  public Punto(Scene scene) {
+    super(scene);
   }
 
   @Override
   public void visit() {
-    pushStyle();
-    noStroke();
-    if (!this.graph().isInputGrabber(this)) {
-      fill(startColor);
-      sphere(this.startSize);
-    } else {
-      fill(this.endSize);
-      sphere(this.endSize);
-    }
-
-
-    popStyle();
+    scene.drawPickingTarget(this);
   }
-  // @Override
-  // public void interact(frames.input.Event event) {
-  //   if (event.shortcut().matches(new Shortcut(LEFT))) {
-  //     println(this.position());
-  //   }
-
-    //  } else {
-    //    rotate(event);
-    //  }
-    //else if (event.shortcut().matches(new Shortcut(CENTER)))
-    //  translate(event);
-    //else if (event.shortcut().matches(new Shortcut(processing.event.MouseEvent.WHEEL)))
-    //  if (event.isShiftDown()) {
-    //    translateZ(event);
-    //}
-    // this.graph.eye().interact(event);
-  // }
+  @Override
+  public void interact(frames.input.Event event) {
+    if (event.shortcut().matches(new TapShortcut(LEFT, 1))) {
+      if (addPortico) {
+        if (i == null) {
+          i = position();
+        } else if (j == null) {
+          j = position();
+        }
+        println("i: ", i);;
+        println("j: ", j);
+        println("\n");
+      }
+    }
+  }
 }
   public void settings() {  size(640, 360, P3D); }
   static public void main(String[] passedArgs) {

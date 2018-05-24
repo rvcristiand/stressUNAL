@@ -9,26 +9,35 @@ import java.util.List;
 import java.util.Arrays;
 
 import frames.processing.Scene;
-import frames.core.Graph;
+
 import frames.core.Node;
+import frames.core.Graph;
+import frames.core.Interpolator;
+
+import frames.primitives.Frame;
 import frames.primitives.Vector;
 import frames.primitives.Quaternion;
+
 import frames.input.Shortcut;
+
+import frames.input.event.TapShortcut;
 
 
 // frames
 Scene scene;
-Node eye;
+Eye eye;
 
 // stressUNAL
 Grilla grilla;
-// ArrayList<Portico> porticos;
+
+Vector i;
+Vector j;
+
+ArrayList<Portico> porticos;
 // Punto punto;
 
 // mouse
 Vector positionMousePressed;
-// Vector i;
-// Vector j;
 
 // boolean isLeftMouseButtonPressed;
 // boolean isRightMouseButtonPressed;
@@ -39,7 +48,7 @@ boolean isMouseDragged;
 
 // keyboard
 // boolean isControlKeyPressed;
-// boolean addFrame;
+boolean addPortico;
 
 void setup() {
   size(640, 360, P3D);
@@ -54,7 +63,7 @@ void setup() {
   scene.setType(Graph.Type.ORTHOGRAPHIC);
 
   // Set eye
-  eye = new OrbitNode(scene);
+  eye = new Eye(scene);
   scene.setEye(eye);
   scene.setFieldOfView((float) Math.PI / 3);
   scene.setDefaultGrabber(eye); // el nodo captura los dispositivos de entrada
@@ -63,8 +72,8 @@ void setup() {
 
   // stressUNAL
   grilla = new Grilla(scene);
-  // grilla.setPoints();
-  // porticos = new ArrayList();
+  grilla.setPoints();
+  porticos = new ArrayList();
   // Punto
   // punto = new Punto(scene);
 }
@@ -73,28 +82,31 @@ void draw() {
   background(127);
   fill(204, 102, 0);
   // box(20, 30, 50);
-  // scene.traverse();
+  scene.traverse();
   scene.drawAxes();
   // scene.drawDottedGrid();
 
-  // addFrame();
+  if (addPortico) {
+    addPortico();
+  }
+
+  for (Portico portico : porticos) {
+    scene.drawPath(portico);
+  }
+
   drawRectMouseDragged();
   // zoomAll();
 }
 
-// void addFrame() {
-//   if (i == null) {
-//     seti();
-//     j = null;
-//   } else {
-//     setj();
-//     println("i: ", i);
-//     println("j: ", j);
-//     // porticos.add(new Portico(i, j));
-//     i = null;
-//     j = null;
-//   }
-// }
+void addPortico() {
+  if (i != null && j != null) {
+    Nodo i = new Nodo(scene, i);
+    Nodo j = new Nodo(scene, j);
+    // porticos.add(new Portico(scene, i, j));
+    i = null;
+    j = null;
+  }
+}
 
 // void seti() {
 //   i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
@@ -189,26 +201,26 @@ void mouseReleased() {
 //   // mouseButtonPressed();
 // }
 
-// void keyPressed() {
+void keyPressed() {
 //   // key pressed flags
 //   // if (key == '+') {
 //   //   grilla.setnumx(5);
 //   // }
-//   if (key == 'f') {
-//     addFrame = !addFrame;
-//
-//     if (addFrame) {
-//       println("Draw a frame");
-//     } else {
-//       println('\n');
-//     }
+  if (key == 'f') {
+    addPortico = !addPortico;
+
+    if (addPortico) {
+      println("Draw a frame");
+    } else {
+      println("Abort !");
+    }
 //   }
 //   // if (key == CODED) {
 //   //   switch (keyCode) {
 //   //     case CONTROL : isControlKeyPressed = true;
 //   //   }
-//   // }
-// }
+  }
+}
 
 // void keyReleased() {
 //   // key pressed flags

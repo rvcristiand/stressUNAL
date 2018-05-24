@@ -8,11 +8,8 @@
  * Feel free to copy paste it.
  */
 
-import frames.input.event.TapEvent;
-import frames.input.event.TapShortcut;
-
-public class OrbitNode extends Node {
-  public OrbitNode(Graph graph) {
+public class Eye extends Node {
+  public Eye(Graph graph) {
     super(graph);
     setWheelSensitivity(-wheelSensitivity());
     setRotationSensitivity(1.5f);
@@ -40,7 +37,7 @@ public class OrbitNode extends Node {
     }
     // zoom all
     else if (event.shortcut().matches(new TapShortcut(CENTER, 1))) {
-      this.graph().fitBallInterpolation();
+      graph().fitBallInterpolation();
     }
   }
 }

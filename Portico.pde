@@ -5,33 +5,25 @@
 //  * This class implements a Frame ...
 //  */
 //
-public class Portico {
-  Node node;
-  PShape s;
+public class Portico extends Interpolator {
+  ArrayList<Frame> _path;
 
   Vector i;
   Vector j;
 
-  public Portico(Vector i, Vector j) {
+  public Portico(Scene scene, Vector i, Vector j) {
+    super((Graph) scene);
+
     this.i = i;
     this.j = j;
-
-    this.node = new Node(scene) {
-      @Override
-      public void visit() {
-        drawLine();
-      }
-    };
-    node.setPosition(j);
+    _path = new ArrayList();
   }
 
-  void drawLine() {
-    beginShape();
-    pushStyle();
-    stroke(20);
-    vertex(this.i.x(), this.i.y(), this.i.z());
-    vertex(this.j.x(), this.j.y(), this.j.z());
-    popStyle();
-    endShape();
+  @Override
+  public ArrayList<Frame> path() {
+    _path.add(new Frame(i, new Quaternion()));
+    _path.add(new Frame(j, new Quaternion()));
+
+    return _path;
   }
 }
