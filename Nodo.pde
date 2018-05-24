@@ -6,14 +6,22 @@
  */
 
 public class Nodo extends Punto {
-  float startSize = 1;
-  int startColor  = color(255, 0, 0);
+  float startSize;
+  int startColor;
 
-  float endSize = 1.5 * startSize;
-  int endColor  = color(0, 255, 255);
+  float endSize;
+  int endColor;
 
   public Nodo(Scene scene, Vector i) {
-    super(scene, null, i, new Quaternion(), 1);
+    super(scene);
+
+    setPosition(i);
+
+    startSize = 2;
+    startColor  = color(255, 0, 0);
+
+    endSize = 1.5 * startSize;
+    endColor  = color(0, 255, 255);
   }
 
   @Override

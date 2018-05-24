@@ -58,9 +58,10 @@ Eye eye;
 // stressUNAL
 Grilla grilla;
 
-Vector i;
-Vector j;
+Vector positionI;
+Vector positionJ;
 
+ArrayList<Nodo> nodos;
 ArrayList<Portico> porticos;
 // Punto punto;
 
@@ -101,6 +102,7 @@ public void setup() {
   // stressUNAL
   grilla = new Grilla(scene);
   grilla.setPoints();
+  nodos    = new ArrayList();
   porticos = new ArrayList();
   // Punto
   // punto = new Punto(scene);
@@ -114,6 +116,7 @@ public void draw() {
   scene.drawAxes();
   // scene.drawDottedGrid();
 
+
   if (addPortico) {
     addPortico();
   }
@@ -126,22 +129,30 @@ public void draw() {
   // zoomAll();
 }
 
+public void addNodo(Vector i) {
+  nodos.add(new Nodo(scene, i));
+}
+
 public void addPortico() {
-  if (i != null && j != null) {
-    Nodo i = new Nodo(scene, i);
-    Nodo j = new Nodo(scene, j);
-    // porticos.add(new Portico(scene, i, j));
-    i = null;
-    j = null;
+  if (positionI != null && positionJ == null) {
+    addNodo(positionI);
+  } else if (positionJ != null){
+    addNodo(positionJ);
+
+    positionI = null;
+    positionJ = null;
   }
+
+
+    // porticos.add(new Portico(scene, positionI, positionJ));
 }
 
 // void seti() {
-//   i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+//   positionI = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
 // }
 //
 // void setj() {
-//   j = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+//   positionJ = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
 // }
 
 // void zoomAll() {
@@ -366,14 +377,22 @@ public class Eye extends Node {
  */
 
 public class Nodo extends Punto {
-  float startSize = 1;
-  int startColor  = color(255, 0, 0);
+  float startSize;
+  int startColor;
 
-  float endSize = 1.5f * startSize;
-  int endColor  = color(0, 255, 255);
+  float endSize;
+  int endColor;
 
   public Nodo(Scene scene, Vector i) {
-    super(scene, null, i, new Quaternion(), 1);
+    super(scene);
+
+    setPosition(i);
+
+    startSize = 2;
+    startColor  = color(255, 0, 0);
+
+    endSize = 1.5f * startSize;
+    endColor  = color(0, 255, 255);
   }
 
   @Override
@@ -452,19 +471,18 @@ public class Punto extends Node {
   public void visit() {
     scene.drawPickingTarget(this);
   }
+
   @Override
   public void interact(frames.input.Event event) {
     if (event.shortcut().matches(new TapShortcut(LEFT, 1))) {
-      if (addPortico) {
-        if (i == null) {
-          i = position();
-        } else if (j == null) {
-          j = position();
-        }
-        println("i: ", i);;
-        println("j: ", j);
-        println("\n");
+      if (positionI == null) {
+        positionI = position();
+      } else if (positionJ == null) {
+        positionJ = position();
       }
+      println("positionI: ", positionI);;
+      println("positionJ: ", positionJ);
+      println("\n");
     }
   }
 }

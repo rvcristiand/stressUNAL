@@ -30,9 +30,10 @@ Eye eye;
 // stressUNAL
 Grilla grilla;
 
-Vector i;
-Vector j;
+Vector positionI;
+Vector positionJ;
 
+ArrayList<Nodo> nodos;
 ArrayList<Portico> porticos;
 // Punto punto;
 
@@ -73,6 +74,7 @@ void setup() {
   // stressUNAL
   grilla = new Grilla(scene);
   grilla.setPoints();
+  nodos    = new ArrayList();
   porticos = new ArrayList();
   // Punto
   // punto = new Punto(scene);
@@ -86,6 +88,7 @@ void draw() {
   scene.drawAxes();
   // scene.drawDottedGrid();
 
+
   if (addPortico) {
     addPortico();
   }
@@ -98,22 +101,30 @@ void draw() {
   // zoomAll();
 }
 
+void addNodo(Vector i) {
+  nodos.add(new Nodo(scene, i));
+}
+
 void addPortico() {
-  if (i != null && j != null) {
-    Nodo i = new Nodo(scene, i);
-    Nodo j = new Nodo(scene, j);
-    // porticos.add(new Portico(scene, i, j));
-    i = null;
-    j = null;
+  if (positionI != null && positionJ == null) {
+    addNodo(positionI);
+  } else if (positionJ != null){
+    addNodo(positionJ);
+
+    positionI = null;
+    positionJ = null;
   }
+
+
+    // porticos.add(new Portico(scene, positionI, positionJ));
 }
 
 // void seti() {
-//   i = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+//   positionI = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
 // }
 //
 // void setj() {
-//   j = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
+//   positionJ = scene.unprojectedCoordinatesOf(new Vector(mouseX, mouseY));
 // }
 
 // void zoomAll() {
